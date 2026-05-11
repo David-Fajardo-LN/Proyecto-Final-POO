@@ -36,12 +36,13 @@ public class App {
             
             switch(op){
                 case 1:
-                    menuBibliotecario(sc, bibliotecarios);
+                    menuBibliotecario(sc, bibliotecarios);break;
                 case 2:
-                    menuUsuarios(sc,usuarios);
+                    menuUsuarios(sc,usuarios);break;
                 case 3:
-                    menuLibro(sc,libros);
+                    menuLibro(sc,libros);break;
                 case 4:
+                    menuPrestamo(sc,usuarios,libros);break;
                 case 5:
                     System.out.println("Saliendo del programa...");
                     return;
@@ -66,14 +67,14 @@ public class App {
             
             switch(op){
                 case 1:
-                    System.out.println("Ingrese el codigo de empleado: ");
+                    System.out.print("Ingrese el codigo de empleado: ");
                     String cod = sc.nextLine();
                     
                     for(Bibliotecario b: bibliotecarios){
                         if(b.getCodigo().equals(cod)){
                             System.out.println("Bibliotecario encontrado...");
                             System.out.println(b);
-                            break;
+                            return;
                         }
                     }
                     System.out.println("Bibliotecario no encontrado...");
@@ -81,9 +82,8 @@ public class App {
 
                 case 2:
                     System.out.println("=== DATOS BIBLIOTECARIO");
-                    System.out.print("Codigo de empleado");
+                    System.out.print("Codigo de empleado: ");
                     String codigo = sc.nextLine();
-                    sc.nextLine();
                     
                     for(Bibliotecario b : bibliotecarios){
                         if(b.getCodigo().equals(codigo)){
@@ -141,7 +141,7 @@ public class App {
                         if(u.getCodigo().equals(cedula)){
                             System.out.println("Usuario encontrado...");
                             System.out.println(u);
-                            break;
+                            return;
                         }
                     }
                     System.out.println("Usuario no encontrado");break;
@@ -185,7 +185,7 @@ public class App {
                     }
                     break;
                 case 4:
-                    System.out.println("Saliendo del menu empleados...");
+                    System.out.println("Saliendo del menu usuarios...");
                     break;
                 default:
                     System.out.println("Opcion invalida...");break;
@@ -306,12 +306,13 @@ public class App {
                     
                     System.out.print("Codigo del prestamo: ");
                     int codigo= sc.nextInt();
+                    sc.nextLine();
                     
                     LocalDate fechaPrestamo = LocalDate.now();
                     LocalDate fechaLimite = fechaPrestamo.plusDays(3);
                     
                     Prestamo prestamo = new Prestamo(true,codigo, fechaPrestamo, fechaLimite, usuario,libro);
-                    usuario.setPrestamo(prestamo);
+                    usuario.agregarPrestamo(prestamo);
                     System.out.println("Prestamo generado con exito...");
                     break;
                     
@@ -331,6 +332,7 @@ public class App {
                     
                     System.out.print("Ingrese el codigo del prestamo: ");
                     int cod = sc.nextInt();
+                    sc.nextLine();
                     
                     Prestamo encontrado = null;
                     for(Prestamo p: usuario2.getPrestamos()){
@@ -354,8 +356,6 @@ public class App {
                         System.out.println("Ingrese el codigo de la sancion: ");
                         int codig = sc.nextInt();
                         
-                        Sancion sancion = new Sancion(true, codig, motivo, monto);
-                        
                         encontrado.crearSancion(true, codig, motivo, monto);
                         System.out.println("Sancion creada con exito...");
                         break;
@@ -364,8 +364,62 @@ public class App {
                     System.out.println("La devolicion fue registrada");break;
                     
                 case 3:
+                    System.out.println("== INGRESE LOS DATOS PARA PAGAR MULTA ==");
+                    System.out.print("Cedula del usuario: ");
+                    String cedu = sc.nextLine();
+
+                    Usuario usuario3 = null;
+
+                    for (Usuario u : usuarios) {
+                        if (u.getCodigo().equals(cedu)) {
+                            usuario3 = u;
+                            break;
+                        }
+                    }
+
+                    if (usuario3 == null) {
+                        System.out.println("El usuario no existe...");
+                        break;
+                    }
+
+                    if (!usuario3.tieneSancionPendiente()) {
+                        System.out.println("El usuario no tiene sanciones pendientes");
+                        break;
+                    }
+
+                    System.out.print("Ingrese el codigo de prestamo: ");
+                    int cd = sc.nextInt();
+                    sc.nextLine();
+
+                    Prestamo p = usuario3.buscarPrestamo(cd);
+
+                    if (p == null) {
+                        System.out.println("Prestamo no encontrado...");
+                        break;
+                    }
+
+                    Sancion s = p.getSancion();
+
+                    if (s == null || !s.getEstado()) {
+                        System.out.println("Este prestamo no tiene sancion activa");
+                        break;
+                    }
+
+                    System.out.println("La multa en dolares: " + s.getMonto());
+
+                    System.out.print("Ingrese la cantidad pagada: ");
+                    int pago = sc.nextInt();
+                    sc.nextLine();
+
+                    if (pago == s.getMonto()) {
+                        s.sancionInactiva();
+                        System.out.println("Multa cancelada con exito...");
+                    } else {
+                        System.out.println("Cantidad incorrecta, no se proceso, intente otra vez...");
+                    }
+                    
                 case 4:
-                case 5:
+                    System.out.println("Saliendo del menu de prestamos...");break;
                 default:
                     System.out.println("Saliendo del menu de prestamos....");break;
             }

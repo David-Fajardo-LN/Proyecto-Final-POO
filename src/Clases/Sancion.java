@@ -32,6 +32,14 @@ public class Sancion {
     public void setMonto(int monto) {
         this.monto = monto;}
     
+    public boolean getEstado(){
+        return estado;
+    }
+    
+    public void sancionInactiva(){
+        this.estado=false;
+    }
+    
     public String toString(){
         String m= "===INFORMACION DE LA SANCION===";
         m+= "\nEstado: "+estado;

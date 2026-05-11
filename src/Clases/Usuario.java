@@ -14,7 +14,7 @@ public class Usuario extends Persona{
         return prestamos;
     } 
 
-    public void setPrestamo(Prestamo p){
+    public void agregarPrestamo(Prestamo p){
         prestamos.add(p);
     }
     
@@ -24,6 +24,7 @@ public class Usuario extends Persona{
 
     public Usuario(String codigo, String nombre, String Direccion, String numeroTelefonico, String correoElectronico) {
         super(codigo, nombre, Direccion, numeroTelefonico, correoElectronico);
+        prestamos = new ArrayList<Prestamo>();
     }
     
     public void mostrarHistorialPrestamo(){
@@ -43,7 +44,7 @@ public class Usuario extends Persona{
     
     public boolean tieneSancionPendiente(){
         for(Prestamo p: prestamos){
-            if(p.getSancion()!=null){
+            if(p.getSancion()!=null && p.getSancion().getEstado()==true){
                 return true;
             }
         }
@@ -58,5 +59,23 @@ public class Usuario extends Persona{
         }
     }
     
+    public Prestamo buscarPrestamo(int codigo){
+        for(Prestamo p: prestamos){
+            if(p.getCodigo()==codigo){
+                return p;
+            }
+        }
+        return null;
+    }
     
+    @Override
+    public String toString() {
+        String m = "===INFORMACION DEL USUARIO===";
+        m += "\nCodigo: " + codigo;
+        m += "\nNombre: " + nombre;
+        m += "\nDireccion: " + direccion;
+        m += "\nNumero Telefonico: " + numeroTelefonico;
+        m += "\nCorreo Electronico: " + correoElectronico;
+        return m;
+    }
 }

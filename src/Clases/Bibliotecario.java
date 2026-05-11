@@ -5,6 +5,7 @@
 package Clases;
 import java.util.ArrayList;
 import Clases.Prestamo;
+import java.time.LocalDate;
 
 public class Bibliotecario extends Persona{
     
@@ -19,7 +20,15 @@ public class Bibliotecario extends Persona{
         prestamos = new ArrayList<Prestamo>();
     }
     
-    
+    public void registrarDevolucion(Prestamo prestamo) {
+        if (prestamo != null) {
+            prestamo.setFechaDevolucion(LocalDate.now());
+            prestamo.estaInactivo();
+            System.out.println("Devolucion registrada por: " + codigo);
+        } else {
+            System.out.println("Prestamo no valido");
+        }
+    }
     @Override
     public String toString() {
         String m = "===INFORMACION DEL BIBLIOTECARIO===";

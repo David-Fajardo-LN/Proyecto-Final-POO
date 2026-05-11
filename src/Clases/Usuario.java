@@ -14,7 +14,7 @@ public class Usuario extends Persona{
         return prestamos;
     } 
 
-    public void agregarPrestamo(Prestamo p){
+    public void setPrestamo(Prestamo p){
         prestamos.add(p);
     }
     

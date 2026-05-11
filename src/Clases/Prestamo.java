@@ -18,9 +18,7 @@ public class Prestamo {
     private Libro libro;
     private Sancion sancion;
 
-    public Prestamo() {
-    }
-
+    public Prestamo() {}
     public Prestamo(boolean estado, int codigo, LocalDate fechaPrestamo, LocalDate fechaLimite, Usuario usuario, Libro libro) {
         this.estado = estado;
         this.codigo = codigo;
@@ -30,52 +28,30 @@ public class Prestamo {
         this.libro = libro;
     }
 
-
     public int getCodigo() {
-        return codigo;
-    }
-
+        return codigo;}
     public void setCodigo(int codigo) {
-        this.codigo = codigo;
-    }
-
+        this.codigo = codigo;}
     public LocalDate getFechaPrestamo() {
-        return fechaPrestamo;
-    }
-
+        return fechaPrestamo;}
     public void setFechaPrestamo(LocalDate fechaPrestamo) {
-        this.fechaPrestamo = fechaPrestamo;
-    }
-
+        this.fechaPrestamo = fechaPrestamo;}
     public LocalDate getFechaLimite() {
-        return fechaLimite;
-    }
-
+        return fechaLimite;}
     public void setFechaLimite(LocalDate fechaLimite) {
-        this.fechaLimite = fechaLimite;
-    }
-
+        this.fechaLimite = fechaLimite;}
     public LocalDate getFechaDevolucion() {
-        return fechaDevolucion;
-    }
-
+        return fechaDevolucion;}
     public void setFechaDevolucion(LocalDate fechaDevolucion) {
-        this.fechaDevolucion = fechaDevolucion;
-    }
-
+        this.fechaDevolucion = fechaDevolucion;}
     public boolean getEstado() {
-        return estado;
-    }
-
+        return estado;}
     public Sancion getSancion() {
-        return sancion;
-    }
-
+        return sancion;}
+    
     public void estaInactivo() {
-        this.estado = false;
-    }
+        this.estado = false;}
     
     public void crearSancion(boolean estado, int codigo, String motivo, int monto) {
-        this.sancion = new Sancion(estado,codigo,motivo, monto);
-    }
+        this.sancion = new Sancion(estado,codigo,motivo, monto);}
 }

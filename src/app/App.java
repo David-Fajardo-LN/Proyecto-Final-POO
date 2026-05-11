@@ -42,7 +42,7 @@ public class App {
                 case 3:
                     menuLibro(sc,libros);break;
                 case 4:
-                    menuPrestamo(sc,usuarios,libros);break;
+                    menuPrestamo(sc,usuarios,libros,bibliotecarios);break;
                 case 5:
                     System.out.println("Saliendo del programa...");
                     return;
@@ -257,7 +257,7 @@ public class App {
         }while(op!=3);
     }
     
-    public static void menuPrestamo(Scanner sc, ArrayList<Usuario> usuarios, ArrayList<Libro> libros){
+    public static void menuPrestamo(Scanner sc, ArrayList<Usuario> usuarios, ArrayList<Libro> libros, ArrayList<Bibliotecario> bibliotecarios){
         int op;
         do{
             System.out.println("=== MENU DE PRESTAMOS ===");
@@ -318,50 +318,77 @@ public class App {
                     
                 case 2:
                     System.out.println("=== REGISTRAR DEVOLUCION ===");
+
+                    System.out.print("Ingrese el codigo del bibliotecario: ");
+                    String codBib = sc.nextLine();
+
+                    Bibliotecario b = null;
+
+                    for (Bibliotecario bi : bibliotecarios) {
+                        if (bi.getCodigo().equals(codBib)) {
+                            b = bi;
+                            break;
+                        }
+                    }
+
+                    if (b == null) {
+                        System.out.println("Bibliotecario no encontrado...");
+                        break;
+                    }
+
                     System.out.print("Ingrese la cedula del usuario: ");
                     String ced = sc.nextLine();
-                    
-                    Usuario usuario2=null;
-                    for(Usuario u : usuarios){
-                        if(u.getCodigo().equals(ced)){
-                            usuario2=u;break;
+
+                    Usuario usuario2 = null;
+
+                    for (Usuario u : usuarios) {
+                        if (u.getCodigo().equals(ced)) {
+                            usuario2 = u;
+                            break;
                         }
-                    }if(usuario2==null){
-                        System.out.println("Usuario no encontrado...");break;
                     }
-                    
+
+                    if (usuario2 == null) {
+                        System.out.println("Usuario no encontrado...");
+                        break;
+                    }
+
                     System.out.print("Ingrese el codigo del prestamo: ");
                     int cod = sc.nextInt();
                     sc.nextLine();
-                    
+
                     Prestamo encontrado = null;
-                    for(Prestamo p: usuario2.getPrestamos()){
-                        if(p.getCodigo() == cod){
+
+                    for (Prestamo p : usuario2.getPrestamos()) {
+                        if (p.getCodigo() == cod) {
                             encontrado = p;
                             break;
                         }
                     }
-                    if(encontrado == null){
+
+                    if (encontrado == null) {
                         System.out.println("Prestamo no encontrado...");
                         break;
                     }
-                    
-                    if(LocalDate.now().isAfter(encontrado.getFechaLimite())){
-                        System.out.println("La devolucion ya exedio la fecha limite, se asigna una sanciond de $30");
-                        System.out.println("Para registrar la devolucion, primero debe pagar la multa asignada");
-                        
+                    if (LocalDate.now().isAfter(encontrado.getFechaLimite())) {
+                        System.out.println("Devolución tardía, se generará sanción de $30");
+
                         int monto = 30;
                         String motivo = "Retraso en la devolucion";
-                        
-                        System.out.println("Ingrese el codigo de la sancion: ");
+
+                        System.out.print("Ingrese codigo de sancion: ");
                         int codig = sc.nextInt();
-                        
+                        sc.nextLine();
+
                         encontrado.crearSancion(true, codig, motivo, monto);
-                        System.out.println("Sancion creada con exito...");
+
+                        System.out.println("Sancion creada. No se puede registrar devolución aún...");
                         break;
                     }
-                    encontrado.estaInactivo();
-                    System.out.println("La devolicion fue registrada");break;
+                    b.registrarDevolucion(encontrado);
+
+                    System.out.println("La devolucion fue registrada correctamente...");
+                    break;
                     
                 case 3:
                     System.out.println("== INGRESE LOS DATOS PARA PAGAR MULTA ==");
